@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import requests
 
@@ -31,15 +32,17 @@ db = client.dbsparta
 
 @app.route("/")
 def home():
-    token_receive = request.cookies.get("usertocken")
+    token_receive = request.cookies.get("usertoken")
+    print("여기는 뭐나오니",token_receive)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.user.find_one({"username": payload["username"]}, {
-                                     '_id': False, 'userpw': False})
-        return render_template('main.html', user=user_info)
+        user_info = db.user.find_one({"username": payload["username"]}, {'_id': False, 'userpw': False})
+        return redirect(url_for('check'), user=user_info)
+        # return render_template('main.html', user=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
+        print("here")
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
@@ -55,11 +58,10 @@ def token_sender(token):
 # 정우용
 # 로그인/회원가입
 # Page indexing
-
-
 @app.route("/login")
 def login():
     token_receive = request.cookies.get("usertoken")
+    # return render_template("main.html")
     if token_receive is not None:
         return render_template("main.html", user=token_sender(token_receive))
     return render_template("login.html")
@@ -91,6 +93,7 @@ def api_register():
 def api_login():
     userid = request.form.get("userid", False)
     userpw = request.form.get("userpw", False)
+    print("여기는 뭐나오니",userid,userpw)
     pw_hash = hashlib.sha256(userpw.encode('utf-8')).hexdigest()
     result = db.user.find_one({'userid': userid, 'userpw': pw_hash})
 
@@ -108,28 +111,23 @@ def api_login():
 
 # 강다온
 # 미세먼지 조회
-@app.route("/check", methods=["POST"])
-def mars_post():
+@app.route("/api/check", methods=["POST"])
+def dust_post():
+    ## 정우용
+    # token_receive = request.cookies.get("usertoken")
+    # user_info = token_sender(token_receive)
     city = request.form['city']
+    print("요청보낸 city값입니다 : ",city)
     data = requests.get('https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=NoJIHUETtC3dz34URMbrqaNvB%2BzRaDjly51j1TcQqVEvO9aSO3JWj4UcBeAKBFmRvvjOEuUL9D%2ByIp7xuWSkhw%3D%3D&returnType=json&numOfRows=100&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&ver=1.0')
     result = data.json()
+    
     rows = result['response']['body']['items']
-
+    # rows는 배열입니다
     for a in rows:
         station = a['stationName']
-        dust = int(a['pm10Value'])
-        status = ""
-        if dust >= 0 or dust <= 15:
-            status = "좋음"
-        elif dust <= 35:
-            status = "보통"
-        elif dust <= 75:
-            status = "나쁨"
-        else:
-            status = "매우나쁨"
-
+        dust = a['pm10Value']
         if station == city:
-            return jsonify({'dust': dust}, {'city': station}, {'status': status})
+            return jsonify({'dust': dust}, {'city': station})
 
 
 # 박나원
