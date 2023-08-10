@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>로그인</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
   </head>
   <style>
     @font-face {
@@ -121,18 +123,18 @@
 
       <div class="inputLayout">
         <label class="label">아이디</label><br />
-        <input type="text" placeholder="아이디를 입력해주세요!" />
+        <input type="text" placeholder="아이디를 입력해주세요!" id="userid"/>
       </div>
 
       <div class="inputLayout">
         <label class="label">비밀번호</label><br />
-        <input type="password" placeholder="비밀번호를 입력해주세요!" />
+        <input type="password" placeholder="비밀번호를 입력해주세요!" id="userpw" />
       </div>
 
 
-      <button type="button">확인</button>
-
       <button type="button" onclick="login()">확인</button>
+
+      <button type="button" onclick="signup()">회원가입</button>
 
     </div>
     <div class="pictureLayout">

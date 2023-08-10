@@ -9,8 +9,19 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <title>확인하기</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
   </head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+    function logout(){
+      $.removeCookie('usertoken');
+      alert('로그아웃!')
+      window.location.href='/login'
+    }
+  </script>
 
   <style>
     body {
@@ -131,11 +142,7 @@
     <div class="info">
       <div class="dropBar">
         <div class="seoul">
-
           <select class="list" id="cities">
-
-          <select class="list">
-
             <option value="#">강남구</option>
             <option value="#">강동구</option>
             <option value="#">강북구</option>
@@ -177,6 +184,8 @@
         <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
       </div>
       <a href="">산책 후기 보러 가기</a>
+      <button class="button is-danger" onclick="logout()">로그아웃하기</button>
+
     </div>
   </body>
 </html>
