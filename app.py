@@ -34,12 +34,13 @@ def home():
     token_receive = request.cookies.get("usertocken")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.user.find_one({"username": payload["username"]}, {
-                                     '_id': False, 'userpw': False})
-        return render_template('main.html', user=user_info)
+        user_info = db.user.find_one({"username": payload["username"]}, {'_id': False, 'userpw': False})
+        return redirect(url_for('check'), user=user_info)
+        # return render_template('main.html', user=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
+        print("here")
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
@@ -55,8 +56,6 @@ def token_sender(token):
 # 정우용
 # 로그인/회원가입
 # Page indexing
-
-
 @app.route("/login")
 def login():
     token_receive = request.cookies.get("usertoken")
@@ -110,9 +109,15 @@ def api_login():
 # 미세먼지 조회
 @app.route("/check", methods=["POST"])
 def mars_post():
+    ## 정우용
+    token_receive = request.cookies.get("usertoken")
+    user_info = token_sender(token_receive)
+    print("왔니")
     city = request.form['city']
+    print(city)
     data = requests.get('https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=NoJIHUETtC3dz34URMbrqaNvB%2BzRaDjly51j1TcQqVEvO9aSO3JWj4UcBeAKBFmRvvjOEuUL9D%2ByIp7xuWSkhw%3D%3D&returnType=json&numOfRows=100&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&ver=1.0')
     result = data.json()
+    
     rows = result['response']['body']['items']
 
     for a in rows:
