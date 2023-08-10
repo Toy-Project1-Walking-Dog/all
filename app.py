@@ -31,7 +31,7 @@ db = client.dbsparta
 
 @app.route("/")
 def home():
-    token_receive = request.cookies.get("mytoken")
+    token_receive = request.cookies.get("usertocken")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
         user_info = db.user.find_one({"username": payload["username"]}, {
