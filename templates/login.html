@@ -89,6 +89,32 @@
       text-align: center;
     }
   </style>
+
+
+  <script>
+    function login() {
+      $.ajax({
+        type: 'POST',
+        url: '/api/login',
+        data: { userid: $('#userid').val(), userpw: $('#userpw').val() },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            $.cookie('usertoken', response['token']);
+
+            alert('로그인 완료!');
+            window.location.href = '/';
+          } else {
+            alert(response['msg']);
+          }
+        },
+      });
+    }
+    function signup() {
+      window.location.href = '/signup';
+    }
+  </script>
+
+
   <body>
     <div class="whiteBox">
       <h2>로그인</h2>
@@ -103,7 +129,11 @@
         <input type="password" placeholder="비밀번호를 입력해주세요!" />
       </div>
 
+
       <button type="button">확인</button>
+
+      <button type="button" onclick="login()">확인</button>
+
     </div>
     <div class="pictureLayout">
       <p class="title">Walking Dog</p>

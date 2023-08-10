@@ -90,6 +90,7 @@
       padding-left: 5px;
     }
   </style>
+
   <script>
     const test = () => {
       const choiceCity = $("#cities option:checked").text();
@@ -123,13 +124,18 @@
     };
   </script>
 
+
   <body>
     <div class="whiteBox"></div>
 
     <div class="info">
       <div class="dropBar">
         <div class="seoul">
+
           <select class="list" id="cities">
+
+          <select class="list">
+
             <option value="#">강남구</option>
             <option value="#">강동구</option>
             <option value="#">강북구</option>
@@ -157,9 +163,15 @@
             <option value="#">중랑구</option>
           </select>
         </div>
+
         <button type="button" onclick="test()">확인</button>
       </div>
       <div class="text" id="datas">
+
+        <button type="button">확인</button>
+      </div>
+      <div class="text">
+
         <h2>강남구의 미세먼지는 좋음입니다!</h2>
         <h3>미세먼지 수치 200</h3>
         <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
