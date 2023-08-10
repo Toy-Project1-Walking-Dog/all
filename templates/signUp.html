@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>회원가입</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <title>회원가입</title>
   </head>
   <style>
     @font-face {
@@ -91,26 +91,59 @@
       text-align: center;
     }
   </style>
+  <script>
+    function signup() {
+      $.ajax({
+        type: 'POST',
+        url: '/api/register',
+        data: {
+          userid: $('#userid').val(),
+          username: $('#username').val(),
+          userpw: $('#userpw').val(),
+        },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            alert('회원가입 완료!');
+            // window.location.href = '/login';
+            console.log();
+          } else {
+            alert(response['msg']);
+          }
+        },
+      });
+    }
+  </script>
   <body>
     <div class="whiteBox">
       <h2>회원가입</h2>
-
       <div class="inputLayout">
         <label class="label">이름</label><br />
-        <input type="text" placeholder="이름을 입력해주세요!" />
+        <input
+          type="text"
+          class="input"
+          id="username"
+          placeholder="이름을 입력해주세요!"
+        />
       </div>
-
       <div class="inputLayout">
         <label class="label">아이디</label><br />
-        <input type="text" placeholder="아이디를 입력해주세요!" />
+        <input
+          type="text"
+          class="input"
+          id="username"
+          placeholder="아이디를 입력해주세요!"
+        />
       </div>
-
       <div class="inputLayout">
         <label class="label">비밀번호</label><br />
-        <input type="password" placeholder="비밀번호를 입력해주세요!" />
+        <input
+          type="password"
+          class="input"
+          id="userpw"
+          placeholder="비밀번호를 입력해주세요!"
+        />
       </div>
-
-      <button type="button" class="btn">확인</button>
+      <button type="button" class="btn" onclick="signup()">확인</button>
     </div>
     <div class="pictureLayout">
       <p class="title">Walking Dog</p>
