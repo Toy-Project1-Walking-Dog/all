@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ​ ​ ​ @font-face {
+        font-family: 'GangwonEduPowerExtraBoldA';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff')
+          format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      ul,
+      li {
+        list-style: none;
+      }
+
+      body {
+        background-color: #ffdcc9;
+      }
+
+      header {
+        width: 100%;
+        height: 500px;
+      }
+
+      .head_title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 275px;
+        margin-left: 75px;
+      }
+
+      header img {
+        width: 150px;
+        height: 150px;
+      }
+      .head_title h1 {
+        text-align: center;
+        font-family: 'GangwonEduPowerExtraBoldA';
+        font-size: 40px;
+      }
+      .head_box {
+        width: 95%;
+        max-width: 1240px;
+        height: 40px;
+        padding: 30px 0 30px 0;
+        background: #fff;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+      .record_box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 60px;
+        margin-top: -5px;
+      }
+
+      .record_box > input {
+        width: 857px;
+        height: 100%;
+        border-radius: 15px;
+        border: 1px solid #99999942;
+        margin-left: 50px;
+        padding-left: 8px;
+        font-size: 20px;
+      }
+      .record_box > button {
+        width: 164px;
+        height: 50px;
+        text-align: center;
+        border-radius: 25px;
+        border: 1px solid #fff;
+        background: #343434;
+        color: #fff;
+        margin-right: 40px;
+        font-size: 17px;
+      }
+
+      .mybox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 150px​;
+      }
+
+      .in_box {
+        width: 95%;
+        max-width: 1240px;
+        height: 120px;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+      .writer {
+        width: 75px;
+        height: 25px;
+        text-align: left;
+        margin-left: 5px;
+      }
+
+      .main {
+        height: 100px;
+        background: #fff;
+        text-align: left;
+        line-height: 100px;
+        border-radius: 15px;
+        position: relative;
+      }
+      .main_word {
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+
+      .main_word > button {
+        width: 164px;
+        height: 50px;
+        text-align: center;
+        border-radius: 25px;
+        border: 1px solid #fff;
+        background: #343434;
+        color: #fff;
+        font-size: 17px;
+        float: right;
+        margin-top: 25px;
+        margin-right: 40px;
+      }
+    </style>
+    <title>게시판</title>
+  </head>
+  <body>
+    <header>
+      <div class="head_title">
+        <div><h1>나 오늘 산책했개</h1></div>
+        <img src="https://ifh.cc/g/1FnxBv.png" alt="" />
+      </div>
+      <div class="head_box">
+        <div class="record_box">
+          <input
+            type="text"
+            id="record"
+            class="control"
+            placeholder="오늘 산책 후기를 써주세요"
+          />
+          <button onclick="" type="button" class="record_btn">기록하기</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mybox" id="box_list">
+      <div class="in_box">
+        <div class="writer"><h4>멍냥이</h4></div>
+        <div class="main">
+          <div class="main_word">
+            오늘 미세먼지도 없고 날이 정말 좋았어요
+            <button onclick="" type="button" class="del">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

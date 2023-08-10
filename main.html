@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <style>
+    body {
+      background-color: #ffdcc9;
+      width: 1440px;
+      height: 1024px;
+      display: flex;
+    }
+    .whiteBox {
+      width: 580px;
+      height: 717px;
+      display: flex;
+      background-color: white;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 14px;
+      margin-left: 150px;
+      margin-right: 61px;
+      margin-top: 166px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-top: 115px;
+    }
+    button {
+      width: 89px;
+      height: 43px;
+      border-radius: 47px;
+      font-size: 24px;
+      font-style: bold;
+      background-color: #343434;
+      color: white;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      margin-top: 80px;
+      margin-bottom: 80px;
+      transition: box-shadow 0.3s;
+      margin-left: 20px;
+    }
+    button:hover {
+      box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .dropBar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 32px;
+    }
+    h3 {
+      font-size: 24px;
+      margin-bottom: 82px;
+    }
+    img {
+      width: 300px;
+      height: 300px;
+    }
+    a {
+      color: #ff6767;
+    }
+    .list {
+      width: 350px;
+      height: 48px;
+      border-radius: 10px;
+      border: 1px solid #dbdbdb;
+      background: #fff;
+      color: #343434;
+      font-size: 20px;
+      padding-left: 5px;
+    }
+  </style>
+
+  <body>
+    <div class="whiteBox"></div>
+
+    <div class="info">
+      <div class="dropBar">
+        <div class="seoul">
+          <select class="list">
+            <option value="#">강남구</option>
+            <option value="#">강동구</option>
+            <option value="#">강북구</option>
+            <option value="#">강서구</option>
+            <option value="#">관악구</option>
+            <option value="#">광진구</option>
+            <option value="#">구로구</option>
+            <option value="#">금천구</option>
+            <option value="#">노원구</option>
+            <option value="#">도봉구</option>
+            <option value="#">동대문구</option>
+            <option value="#">동작구</option>
+            <option value="#">마포구</option>
+            <option value="#">서대문구</option>
+            <option value="#">서초구</option>
+            <option value="#">성동구</option>
+            <option value="#">성북구</option>
+            <option value="#">송파구</option>
+            <option value="#">양천구</option>
+            <option value="#">영등포구</option>
+            <option value="#">용산구</option>
+            <option value="#">은평구</option>
+            <option value="#">종로구</option>
+            <option value="#">중구</option>
+            <option value="#">중랑구</option>
+          </select>
+        </div>
+        <button type="button">확인</button>
+      </div>
+      <div class="text">
+        <h2>강남구의 미세먼지는 좋음입니다!</h2>
+        <h3>미세먼지 수치 200</h3>
+        <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
+      </div>
+      <a href="">산책 후기 보러 가기</a>
+    </div>
+  </body>
+</html>
