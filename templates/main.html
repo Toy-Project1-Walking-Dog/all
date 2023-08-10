@@ -10,6 +10,7 @@
       crossorigin="anonymous"
     />
   </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <style>
     body {
@@ -90,13 +91,51 @@
     }
   </style>
 
+  <script>
+    const test = () => {
+      const choiceCity = $("#cities option:checked").text();
+      console.log(choiceCity);
+      fetch("/post/check", {
+        method: "POST",
+        body: new URLSearchParams({
+          city: choiceCity,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          alert(
+            `선택하신 위치는 ${data[1].city}이며, 미세먼지는 ${data[0].dust}수치입니다${datap[2].status}`
+          );
+          let temp = `
+          <div class="text" id="datas">
+            <h2>${data[1].city}의 미세먼지는 ${datap[2].status}입니다!</h2>
+            <h3>미세먼지 수치 ${data[0].dust}</h3>
+            <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
+          </div>
+          `;
+          $("#datas").append(temp);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("위치정보를 잘못입력하셨습니다. 다시 입력해 주세요");
+          window.location.reload();
+        });
+    };
+  </script>
+
+
   <body>
     <div class="whiteBox"></div>
 
     <div class="info">
       <div class="dropBar">
         <div class="seoul">
+
+          <select class="list" id="cities">
+
           <select class="list">
+
             <option value="#">강남구</option>
             <option value="#">강동구</option>
             <option value="#">강북구</option>
@@ -124,9 +163,15 @@
             <option value="#">중랑구</option>
           </select>
         </div>
+
+        <button type="button" onclick="test()">확인</button>
+      </div>
+      <div class="text" id="datas">
+
         <button type="button">확인</button>
       </div>
       <div class="text">
+
         <h2>강남구의 미세먼지는 좋음입니다!</h2>
         <h3>미세먼지 수치 200</h3>
         <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
