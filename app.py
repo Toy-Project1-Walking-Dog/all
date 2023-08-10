@@ -59,7 +59,7 @@ def token_sender(token):
 
 @app.route("/login")
 def login():
-    token_receive = request.cookies.get("mytoken")
+    token_receive = request.cookies.get("usertoken")
     if token_receive is not None:
         return render_template("main.html", user=token_sender(token_receive))
     return render_template("login.html")
@@ -67,7 +67,7 @@ def login():
 
 @app.route("/signup")
 def signup():
-    token_receive = request.cookies.get("mytoken")
+    token_receive = request.cookies.get("usertoken")
     if token_receive is not None:
         return render_template("main.html", user=token_sender(token_receive))
     return render_template("signup.html")
