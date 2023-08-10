@@ -111,6 +111,7 @@ def api_login():
 
 # 강다온
 # 미세먼지 조회
+
 @app.route("/api/check", methods=["POST"])
 def dust_post():
     ## 정우용

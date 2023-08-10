@@ -94,19 +94,19 @@
   <script>
     function signup() {
       $.ajax({
-        type: "POST",
-        url: "/api/register",
+        type: 'POST',
+        url: '/api/register',
         data: {
-          userid: $("#userid").val(),
-          username: $("#username").val(),
-          userpw: $("#userpw").val(),
+          userid: $('#userid').val(),
+          username: $('#username').val(),
+          userpw: $('#userpw').val(),
         },
         success: function (response) {
-          if (response["result"] == "success") {
-            alert("회원가입 완료!");
-            window.location.href = "/login";
+          if (response['result'] == 'success') {
+            alert('회원가입 완료!');
+            window.location.href = '/login';
           } else {
-            alert(response["msg"]);
+            alert(response['msg']);
           }
         },
       });
