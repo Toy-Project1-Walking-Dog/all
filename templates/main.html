@@ -9,8 +9,19 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <title>확인하기</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
   </head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+    function logout() {
+      $.removeCookie("usertoken");
+      alert("로그아웃!");
+      window.location.href = "/login";
+    }
+  </script>
 
   <style>
     body {
@@ -95,26 +106,59 @@
     const test = () => {
       const choiceCity = $("#cities option:checked").text();
       console.log(choiceCity);
-      fetch("/post/check", {
+      fetch("/api/check", {
         method: "POST",
         body: new URLSearchParams({
           city: choiceCity,
         }),
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          alert(
-            `선택하신 위치는 ${data[1].city}이며, 미세먼지는 ${data[0].dust}수치입니다${datap[2].status}`
-          );
+        .then(async (data) => {
+          $("#datas").empty();
+          let city = await data[1].city; // 예)강남구
+          let dust = await data[0].dust; // 예)먼지수치 (숫자값)
+          let status; // 예)먼지좋음나쁨지수
+
+          let dustNum = Number(dust);
+
+          let imglike = "https://ifh.cc/g/ASMKOR.png"; // 좋을때 강아지
+          let imgSad = "https://ifh.cc/g/La4Skd.png"; // 조금 슬플때 강아지
+          let imgNomal = "https://ifh.cc/g/X1Xamn.png"; // 보통 강아지
+          let imgVerySad = "https://ifh.cc/g/P0G3hG.png"; // 매우 슬플때 강아지
+
+          let img;
+
+          // python에서 형변화 오류발생으로 프론트로넘겨서 형변화후 작업했습니다
+          if (dustNum >= 0 || dustNum <= 15) {
+            status = "좋음";
+            img = imglike;
+          } else if (dustNum <= 35) {
+            status = "보통";
+            img = imgNomal;
+          } else if (dustNum <= 75) {
+            status = "나쁨";
+            img = imgSad;
+          } else if (dustNum > 75) {
+            status = "매우나쁨";
+            img = imgVerySad;
+          }
+          console.log(city, dustNum, status);
+
+          // 아래 수치부분은 dust로 할시 data의 받아오는 속도차이로 프론트에서 약2초간 기달려야 나오는 이슈가있습니다
+          // 그래서 await함수후 형변화한 dustNum을 넣었으니 변경하지말아주세요
           let temp = `
           <div class="text" id="datas">
-            <h2>${data[1].city}의 미세먼지는 ${datap[2].status}입니다!</h2>
-            <h3>미세먼지 수치 ${data[0].dust}</h3>
-            <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
+            <h2>${city}의 미세먼지는 ${status}입니다!</h2>
+            <h3>미세먼지 수치 ${dustNum}</h3>
+            <img src=${img} alt="" />
           </div>
           `;
           $("#datas").append(temp);
+          $("#watchWalk").empty();
+          let temp2 = `
+            <a href="" id="watchWalk">${city} 후기보기</a>
+          `;
+          $("#watchWalk").append(temp2);
         })
         .catch((err) => {
           console.log(err);
@@ -124,18 +168,13 @@
     };
   </script>
 
-
   <body>
     <div class="whiteBox"></div>
 
     <div class="info">
       <div class="dropBar">
         <div class="seoul">
-
           <select class="list" id="cities">
-
-          <select class="list">
-
             <option value="#">강남구</option>
             <option value="#">강동구</option>
             <option value="#">강북구</option>
@@ -167,16 +206,12 @@
         <button type="button" onclick="test()">확인</button>
       </div>
       <div class="text" id="datas">
-
-        <button type="button">확인</button>
-      </div>
-      <div class="text">
-
         <h2>강남구의 미세먼지는 좋음입니다!</h2>
         <h3>미세먼지 수치 200</h3>
         <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
       </div>
-      <a href="">산책 후기 보러 가기</a>
+      <a href="" id="watchWalk">산책 후기 보러 가기</a>
+      <button class="button is-danger" onclick="logout()">로그아웃하기</button>
     </div>
   </body>
 </html>
