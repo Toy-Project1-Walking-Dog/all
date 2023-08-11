@@ -128,15 +128,15 @@ def post_create():
     user_info = token_sender(token_receive)
     userid = user_info['userid']
     username = user_info['username']
-    userobject_id = str(db.user.find_one({'userid':userid, 'username': username})['_id'])
     doc = {
         'userid': userid,
         'username': username,
         'content': request.form.get('content',False),
-        'postid': userobject_id,
+        'postid':"0" ,
         'city': request.form.get('city',False)
     }
-    db.posts.insert_one(doc)
+    _id = db.posts.insert_one(doc).inserted_id
+    db.posts.update_one({'_id':_id},{'$set':{'postid':str(_id)}})
     return jsonify({"msg": "saved!"})
 
 # 박나원
@@ -156,8 +156,7 @@ def post_apiGet():
 # 박나원
 @app.route("/post/delete", methods=["POST"])
 def post_delete():
-    temp = request.form.get('postid')
-    result = db.posts.delete_one({'postid':temp})
+    result = db.posts.delete_one({'postid':request.form.get('postid')})
     if (result is not None):
         return jsonify({"msg": "Deleted"})
     else:
