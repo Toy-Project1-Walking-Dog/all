@@ -2,12 +2,6 @@ from tkinter.messagebox import NO
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import requests
 
-# URL and headers to crawl
-# URL = "URL to crawl"
-# headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-# # Request
-# data = requests.get(URL, headers=headers)
-
 from pymongo import MongoClient
 import certifi
 
@@ -33,12 +27,10 @@ db = client.dbsparta
 @app.route("/")
 def home():
     token_receive = request.cookies.get("usertoken")
-    print("여기는 뭐나오니",token_receive)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
         user_info = db.user.find_one({"username": payload["username"]}, {'_id': False, 'userpw': False})
-        return redirect(url_for('check'), user=user_info)
-        # return render_template('main.html', user=user_info)
+        return render_template('main.html', user=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -61,7 +53,6 @@ def token_sender(token):
 @app.route("/login")
 def login():
     token_receive = request.cookies.get("usertoken")
-    # return render_template("main.html")
     if token_receive is not None:
         return render_template("main.html", user=token_sender(token_receive))
     return render_template("login.html")
@@ -111,17 +102,16 @@ def api_login():
 
 # 강다온
 # 미세먼지 조회
-
 @app.route("/api/check", methods=["POST"])
 def dust_post():
-    ## 정우용
-    # token_receive = request.cookies.get("usertoken")
-    # user_info = token_sender(token_receive)
     city = request.form['city']
-    print("요청보낸 city값입니다 : ",city)
-    data = requests.get('https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=NoJIHUETtC3dz34URMbrqaNvB%2BzRaDjly51j1TcQqVEvO9aSO3JWj4UcBeAKBFmRvvjOEuUL9D%2ByIp7xuWSkhw%3D%3D&returnType=json&numOfRows=100&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&ver=1.0')
+    # Dear, 다온님 
+    # url은 https 가 아닌 http이어야합니다.
+    # 그리고 ssl 통신관련해서 .get(url=url, verify=False)해야한다고 합니다.
+    # 이유는 몰라요
+    url = 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=NoJIHUETtC3dz34URMbrqaNvB%2BzRaDjly51j1TcQqVEvO9aSO3JWj4UcBeAKBFmRvvjOEuUL9D%2ByIp7xuWSkhw%3D%3D&returnType=json&numOfRows=100&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&ver=1.0'
+    data = requests.get(url=url, verify=False)
     result = data.json()
-    
     rows = result['response']['body']['items']
     # rows는 배열입니다
     for a in rows:
@@ -133,22 +123,36 @@ def dust_post():
 
 # 박나원
 # 게시글 등록
-@app.route("/post", methods=["POST"])
+@app.route("/post/create", methods=["POST"])
 def post_create():
-    return jsonify({"msg": "whataever you want"})
+    token_receive = request.cookies.get("usertoken")
+    user_info = token_sender(token_receive)
+    userid = user_info['userid']
+    username = user_info['username']
+    doc = {
+        'userid': userid,
+        'username': username,
+        'content': request.form.get('content',False),
+        'postid': len(list(db.bucket.find({}, {'_id': False}))) + 1,
+        'city': request.form.get('city',False)
+    }
+    db.posts.insert_one(doc)
+    return jsonify({"msg": "saved!"})
 
+# @app.route("/post", methods=["GET"])
 
 # 박나원
 # 게시글 보기
 @app.route("/post", methods=["GET"])
-def post_list():
-    return jsonify({"msg": "whataever you want"})
+def post_get():
+    return jsonify({'rows': list(db.posts.find({},{'_id':False}))})
 
 
 # 박나원
 # 게시글 삭제
 @app.route("/post/delete", methods=["POST"])
 def post_delete():
+    
     return jsonify({"msg": "whataever you want"})
 
 

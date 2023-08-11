@@ -16,12 +16,21 @@
 
   <script>
     // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
-
     function logout(){
       $.removeCookie('usertoken');
       alert('로그아웃!')
       window.location.href='/login'
 
+    }
+  </script>
+
+  <script>
+    function postlist(idClicked){
+      var cast = {
+        "city": idClicked
+      }
+      localStorage.setItem("cast", JSON.stringify(cast));
+      window.location.href='/post'
     }
   </script>
 
@@ -158,8 +167,9 @@
           $("#datas").append(temp);
           $("#watchWalk").empty();
           let temp2 = `
-            <a href="" id="watchWalk">${city} 후기보기</a>
+            <button id="${city}" onclick="postlist(this.id)">${city} 후기보기!</button>
           `;
+          // <a href="" id="watchWalk">${city} 후기보기</a>
           $("#watchWalk").append(temp2);
         })
         .catch((err) => {
@@ -213,7 +223,10 @@
         <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
       </div>
 
-      <a href="" id="watchWalk">산책 후기 보러 가기</a>
+      <div id="watchWalk">
+
+      </div>
+      <!-- <a href="" id="watchWalk">산책 후기 보러 가기</a> -->
       <button class="button is-danger" onclick="logout()">로그아웃하기</button>
 
     </div>
