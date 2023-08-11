@@ -9,7 +9,6 @@
 
     <script>
       $(document).ready(function () {
-        post_list();
         show_post();
       });
 
@@ -17,27 +16,47 @@
         fetch("/post")
           .then((res) => res.json())
           .then((data) => {
+            let city = JSON.parse(localStorage.getItem("cast"))["city"];
             let rows = data["rows"];
+            let user_info = data['user_info']
+            console.log("city : " ,city)
             console.log("여기확인 : ", rows);
+            // console.log("username:", user_info['username'])
+            // console.log("userid:", user_info['userid'])
             rows.forEach((row) => {
-              temp_html = `<div class="in_box">
+              if (row['city'] == city) {
+                let delete_html = ``
+                if (row['userid'] == user_info['userid'] && row['username'] == user_info['username']) {
+                  delete_html = `<button onclick="delete_post(this.id)" type="button" class="del" id=${row["postid"]}>삭제</button>`
+                }
+                temp_html = `<div class="in_box">
                       <div class="writer">
                       <h4>${row["username"]}</h4>
                       </div>
                       <div class="main">
-                      <div class="main_word">${row["content"]}
-                      <button onclick="" type="button" class="del">삭제</button>
+                      <div class="main_word" id="cur_post">${row["content"]}
+                        ${delete_html}
                       </div>
                       </div>
                       </div>`;
-              $("#box-list").append(temp_html);
+                $("#box-list").append(temp_html);
+              }
             });
           });
       }
 
+      function delete_post(idClicked) {
+        let formData = new FormData()
+        formData.append("postid", idClicked)
+        fetch('/post/delete', {method:"POST", body: formData}).then(res => res.json()).then(data => {
+                alert(data['msg']);
+                window.location.reload();
+        })
+      }
+
       function post_create() {
         let formData = new FormData();
-        let city = JSON.parse(localStorage.getItem("cast"))["city"];
+        let city = JSON.parse(localStorage.getItem("cast"))["city"]
         console.log("session값 잘받아와지니 > ", city);
         formData.append("city", city);
         formData.append("content", $("#content").val());

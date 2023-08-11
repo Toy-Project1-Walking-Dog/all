@@ -128,11 +128,12 @@ def post_create():
     user_info = token_sender(token_receive)
     userid = user_info['userid']
     username = user_info['username']
+    userobject_id = str(db.user.find_one({'userid':userid, 'username': username})['_id'])
     doc = {
         'userid': userid,
         'username': username,
         'content': request.form.get('content',False),
-        'postid': len(list(db.bucket.find({}, {'_id': False}))) + 1,
+        'postid': userobject_id,
         'city': request.form.get('city',False)
     }
     db.posts.insert_one(doc)
@@ -142,35 +143,25 @@ def post_create():
 # 게시글 보기
 @app.route("/post", methods=["GET"])
 def post_get():
-    return jsonify({'rows': list(db.posts.find({},{'_id':False}))})
+    token_receive = request.cookies.get("usertoken")
+    user_info = token_sender(token_receive)
+    rows =list(db.posts.find({},{'_id':False}))
+    return jsonify({'rows': rows, "user_info": user_info})
 
+# 박나원
 @app.route("/api/post", methods=["GET"])
 def post_apiGet():
     return render_template('post.html')
 
-
 # 박나원
-# 게시글 삭제
-# @app.route("/post/delete", methods=["POST"])
-# def post_delete():
-#     return jsonify({"msg": "whataever you want"})
-
-
 @app.route("/post/delete", methods=["POST"])
 def post_delete():
-    # 로그인 확인
-    token_receive = request.cookies.get("usertoken")
-    if token_receive is None:
-         return jsonify({"error": "로그인이 필요합니다."})
-    # 삭제할 게시물 ID 추출
-    data = request.get_json()
-    postid = data['postid']
-    # 게시물 삭제
-    result = db.posts.delete_one({"postid": postid, "userid": jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])["userid"]})
-    if result.deleted_count > 0:
-        return redirect({url_for("post_list")},token_receive)  # post_list 라우트로 리다이렉션
+    temp = request.form.get('postid')
+    result = db.posts.delete_one({'postid':temp})
+    if (result is not None):
+        return jsonify({"msg": "Deleted"})
     else:
-        return jsonify({"error": "게시물 삭제에 실패하였습니다."},{"msg": "게시물이 삭제되었습니다."})
+        return jsonify({"msg": "Not deleted"})
 
 if __name__ == "__main__":
     app.run("0.0.0.0", port=5001, debug=True)
