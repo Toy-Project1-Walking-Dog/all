@@ -19,7 +19,7 @@ ca = certifi.where()
 
 # <pssword> 지우고 '테스트' 하세요
 client = MongoClient(
-    'mongodb+srv://sparta:test@cluster1.rnrelan.mongodb.net/?retryWrites=true&w=majority', tlsCAFILE=ca)
+    'mongodb+srv://sparta:test@cluster0.p6pfel4.mongodb.net/?retryWrites=true&w=majority', tlsCAFILE=ca)
 db = client.dbsparta
 
 
@@ -28,7 +28,8 @@ def home():
     token_receive = request.cookies.get("usertoken")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.user.find_one({"username": payload["username"]}, {'_id': False, 'userpw': False})
+        user_info = db.user.find_one({"username": payload["username"]}, {
+                                     '_id': False, 'userpw': False})
         return render_template('main.html', user=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -49,6 +50,8 @@ def token_sender(token):
 # 정우용
 # 로그인/회원가입
 # Page indexing
+
+
 @app.route("/login")
 def login():
     token_receive = request.cookies.get("usertoken")
@@ -83,7 +86,7 @@ def api_register():
 def api_login():
     userid = request.form.get("userid", False)
     userpw = request.form.get("userpw", False)
-    print("여기는 뭐나오니",userid,userpw)
+    print("여기는 뭐나오니", userid, userpw)
     pw_hash = hashlib.sha256(userpw.encode('utf-8')).hexdigest()
     result = db.user.find_one({'userid': userid, 'userpw': pw_hash})
 
@@ -104,7 +107,7 @@ def api_login():
 @app.route("/api/check", methods=["POST"])
 def dust_post():
     city = request.form['city']
-    # Dear, 다온님 
+    # Dear, 다온님
     # url은 https 가 아닌 http이어야합니다.
     # 그리고 ssl 통신관련해서 .get(url=url, verify=False)해야한다고 합니다.
     # 이유는 몰라요
@@ -131,36 +134,43 @@ def post_create():
     doc = {
         'userid': userid,
         'username': username,
-        'content': request.form.get('content',False),
-        'postid':"0" ,
-        'city': request.form.get('city',False)
+        'content': request.form.get('content', False),
+        'postid': "0",
+        'city': request.form.get('city', False)
     }
     _id = db.posts.insert_one(doc).inserted_id
-    db.posts.update_one({'_id':_id},{'$set':{'postid':str(_id)}})
+    db.posts.update_one({'_id': _id}, {'$set': {'postid': str(_id)}})
     return jsonify({"msg": "saved!"})
 
 # 박나원
 # 게시글 보기
+
+
 @app.route("/post", methods=["GET"])
 def post_get():
     token_receive = request.cookies.get("usertoken")
     user_info = token_sender(token_receive)
-    rows =list(db.posts.find({},{'_id':False}))
+    rows = list(db.posts.find({}, {'_id': False}))
     return jsonify({'rows': rows, "user_info": user_info})
 
 # 박나원
+
+
 @app.route("/api/post", methods=["GET"])
 def post_apiGet():
     return render_template('post.html')
 
 # 박나원
+
+
 @app.route("/post/delete", methods=["POST"])
 def post_delete():
-    result = db.posts.delete_one({'postid':request.form.get('postid')})
+    result = db.posts.delete_one({'postid': request.form.get('postid')})
     if (result is not None):
         return jsonify({"msg": "Deleted"})
     else:
         return jsonify({"msg": "Not deleted"})
+
 
 if __name__ == "__main__":
     app.run("0.0.0.0", port=5001, debug=True)
