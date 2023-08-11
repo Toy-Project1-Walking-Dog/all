@@ -8,6 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <script>
+      function logout() {
+        $.removeCookie('usertoken');
+        alert('로그아웃!');
+        window.location.href = '/login';
+      }
+
       $(document).ready(function () {
         show_post();
       });
