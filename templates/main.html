@@ -17,9 +17,9 @@
   <script>
     // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
     function logout() {
-      $.removeCookie("usertoken");
-      alert("로그아웃!");
-      window.location.href = "/login";
+      $.removeCookie('usertoken');
+      alert('로그아웃!');
+      window.location.href = '/login';
     }
   </script>
 
@@ -28,8 +28,8 @@
       var cast = {
         city: idClicked,
       };
-      localStorage.setItem("cast", JSON.stringify(cast));
-      window.location.href = "/api/post";
+      localStorage.setItem('cast', JSON.stringify(cast));
+      window.location.href = '/api/post';
     }
   </script>
 
@@ -38,6 +38,9 @@
       background-color: #ffdcc9;
       width: 1440px;
       height: 1024px;
+    }
+    .layout {
+      background-color: #ffdcc9;
       display: flex;
     }
     .whiteBox {
@@ -57,9 +60,10 @@
       display: flex;
       flex-direction: column;
       text-align: center;
-      margin-top: 115px;
+      margin-top: 165px;
+      margin-left: 40px;
     }
-    button {
+    .btn {
       width: 89px;
       height: 43px;
       border-radius: 47px;
@@ -75,16 +79,15 @@
       transition: box-shadow 0.3s;
       margin-left: 20px;
     }
-    button:hover {
+    .btn:hover {
       box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
     }
-
     .dropBar {
       display: flex;
       justify-content: center;
       align-items: center;
+      gap: 10px;
     }
-
     h2 {
       font-size: 28px;
       margin-bottom: 32px;
@@ -110,46 +113,58 @@
       font-size: 20px;
       padding-left: 5px;
     }
+    .logout {
+      width: 125px;
+      height: 48px;
+      border-radius: 14px;
+      background: #ffb8a8;
+      color: black;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 26px;
+      margin-left: 1350px;
+    }
   </style>
 
   <script>
     const test = () => {
-      const choiceCity = $("#cities option:checked").text();
+      const choiceCity = $('#cities option:checked').text();
       console.log(choiceCity);
-      fetch("/api/check", {
-        method: "POST",
+      fetch('/api/check', {
+        method: 'POST',
         body: new URLSearchParams({
           city: choiceCity,
         }),
       })
         .then((res) => res.json())
         .then(async (data) => {
-          $("#datas").empty();
+          $('#datas').empty();
           let city = await data[1].city; // 예)강남구
           let dust = await data[0].dust; // 예)먼지수치 (숫자값)
           let status; // 예)먼지좋음나쁨지수
 
           let dustNum = Number(dust);
 
-          let imglike = "https://ifh.cc/g/ASMKOR.png"; // 좋을때 강아지
-          let imgSad = "https://ifh.cc/g/La4Skd.png"; // 조금 슬플때 강아지
-          let imgNomal = "https://ifh.cc/g/X1Xamn.png"; // 보통 강아지
-          let imgVerySad = "https://ifh.cc/g/P0G3hG.png"; // 매우 슬플때 강아지
+          let imglike = 'https://ifh.cc/g/ASMKOR.png'; // 좋을때 강아지
+          let imgSad = 'https://ifh.cc/g/La4Skd.png'; // 조금 슬플때 강아지
+          let imgNomal = 'https://ifh.cc/g/X1Xamn.png'; // 보통 강아지
+          let imgVerySad = 'https://ifh.cc/g/P0G3hG.png'; // 매우 슬플때 강아지
 
           let img;
 
           // python에서 형변화 오류발생으로 프론트로넘겨서 형변화후 작업했습니다
           if (dustNum >= 0 || dustNum <= 15) {
-            status = "좋음";
+            status = '좋음';
             img = imglike;
           } else if (dustNum <= 35) {
-            status = "보통";
+            status = '보통';
             img = imgNomal;
           } else if (dustNum <= 75) {
-            status = "나쁨";
+            status = '나쁨';
             img = imgSad;
           } else if (dustNum > 75) {
-            status = "매우나쁨";
+            status = '매우나쁨';
             img = imgVerySad;
           }
           console.log(city, dustNum, status);
@@ -163,68 +178,66 @@
             <img src=${img} alt="" />
           </div>
           `;
-          $("#datas").append(temp);
-          $("#watchWalk").empty();
+          $('#datas').append(temp);
+          $('#watchWalk').empty();
           let temp2 = `
             <button id="${city}" onclick="postlist(this.id)">${city} 후기보기!</button>
           `;
           // let temp2 = `<a href="/api/post" id="watchWalk">${city} 후기보기</a>`;
-          $("#watchWalk").append(temp2);
+          $('#watchWalk').append(temp2);
         })
         .catch((err) => {
           console.log(err);
-          alert("위치정보를 잘못입력하셨습니다. 다시 입력해 주세요");
+          alert('위치정보를 잘못입력하셨습니다. 다시 입력해 주세요');
           window.location.reload();
         });
     };
   </script>
 
   <body>
-    <div class="whiteBox"></div>
-
-    <div class="info">
-      <div class="dropBar">
-        <div class="seoul">
-          <select class="list" id="cities">
-            <option value="#">강남구</option>
-            <option value="#">강동구</option>
-            <option value="#">강북구</option>
-            <option value="#">강서구</option>
-            <option value="#">관악구</option>
-            <option value="#">광진구</option>
-            <option value="#">구로구</option>
-            <option value="#">금천구</option>
-            <option value="#">노원구</option>
-            <option value="#">도봉구</option>
-            <option value="#">동대문구</option>
-            <option value="#">동작구</option>
-            <option value="#">마포구</option>
-            <option value="#">서대문구</option>
-            <option value="#">서초구</option>
-            <option value="#">성동구</option>
-            <option value="#">성북구</option>
-            <option value="#">송파구</option>
-            <option value="#">양천구</option>
-            <option value="#">영등포구</option>
-            <option value="#">용산구</option>
-            <option value="#">은평구</option>
-            <option value="#">종로구</option>
-            <option value="#">중구</option>
-            <option value="#">중랑구</option>
-          </select>
+    <button class="logout" onclick="logout()">로그아웃</button>
+    <div class="layout">
+      <div class="whiteBox"></div>
+      <div class="info">
+        <div class="dropBar">
+          <div class="seoul">
+            <select class="list" id="cities">
+              <option value="#">강남구</option>
+              <option value="#">강동구</option>
+              <option value="#">강북구</option>
+              <option value="#">강서구</option>
+              <option value="#">관악구</option>
+              <option value="#">광진구</option>
+              <option value="#">구로구</option>
+              <option value="#">금천구</option>
+              <option value="#">노원구</option>
+              <option value="#">도봉구</option>
+              <option value="#">동대문구</option>
+              <option value="#">동작구</option>
+              <option value="#">마포구</option>
+              <option value="#">서대문구</option>
+              <option value="#">서초구</option>
+              <option value="#">성동구</option>
+              <option value="#">성북구</option>
+              <option value="#">송파구</option>
+              <option value="#">양천구</option>
+              <option value="#">영등포구</option>
+              <option value="#">용산구</option>
+              <option value="#">은평구</option>
+              <option value="#">종로구</option>
+              <option value="#">중구</option>
+              <option value="#">중랑구</option>
+            </select>
+          </div>
+          <button type="button" class="btn" onclick="test()">확인</button>
         </div>
-
-        <button type="button" onclick="test()">확인</button>
+        <div class="text" id="datas">
+          <h2>강남구의 미세먼지는 좋음입니다!</h2>
+          <h3>미세먼지 수치 200</h3>
+          <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
+        </div>
+        <a href="" id="watchWalk">산책 후기 보러 가기</a>
       </div>
-      <div class="text" id="datas">
-        <h2>강남구의 미세먼지는 좋음입니다!</h2>
-        <h3>미세먼지 수치 200</h3>
-        <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
-      </div>
-
-      <div id="watchWalk"></div>
-      <!-- <a href="" id="watchWalk">산책 후기 보러 가기</a> -->
-      <button class="button is-danger" onclick="logout()">로그아웃하기</button>
     </div>
   </body>
 </html>

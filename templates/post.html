@@ -13,57 +13,62 @@
       });
 
       function show_post() {
-        fetch("/post")
+        fetch('/post')
           .then((res) => res.json())
           .then((data) => {
-            let city = JSON.parse(localStorage.getItem("cast"))["city"];
-            let rows = data["rows"];
-            let user_info = data['user_info']
-            console.log("city : " ,city)
-            console.log("여기확인 : ", rows);
+            let city = JSON.parse(localStorage.getItem('cast'))['city'];
+            let rows = data['rows'];
+            let user_info = data['user_info'];
+            console.log('city : ', city);
+            console.log('여기확인 : ', rows);
             // console.log("username:", user_info['username'])
             // console.log("userid:", user_info['userid'])
             rows.forEach((row) => {
               if (row['city'] == city) {
-                let delete_html = ``
-                if (row['userid'] == user_info['userid'] && row['username'] == user_info['username']) {
-                  delete_html = `<button onclick="delete_post(this.id)" type="button" class="del" id=${row["postid"]}>삭제</button>`
+                let delete_html = ``;
+                if (
+                  row['userid'] == user_info['userid'] &&
+                  row['username'] == user_info['username']
+                ) {
+                  delete_html = `<button onclick="delete_post(this.id)" type="button" class="del" id=${row['postid']}>삭제</button>`;
                 }
                 temp_html = `<div class="in_box">
                       <div class="writer">
-                      <h4>${row["username"]}</h4>
+                      <h4>${row['username']}</h4>
                       </div>
                       <div class="main">
-                      <div class="main_word" id="cur_post">${row["content"]}
+                      <div class="main_word" id="cur_post">${row['content']}
                         ${delete_html}
                       </div>
                       </div>
                       </div>`;
-                $("#box-list").append(temp_html);
+                $('#box-list').append(temp_html);
               }
             });
           });
       }
 
       function delete_post(idClicked) {
-        let formData = new FormData()
-        formData.append("postid", idClicked)
-        fetch('/post/delete', {method:"POST", body: formData}).then(res => res.json()).then(data => {
-                alert(data['msg']);
-                window.location.reload();
-        })
+        let formData = new FormData();
+        formData.append('postid', idClicked);
+        fetch('/post/delete', { method: 'POST', body: formData })
+          .then((res) => res.json())
+          .then((data) => {
+            alert(data['msg']);
+            window.location.reload();
+          });
       }
 
       function post_create() {
         let formData = new FormData();
-        let city = JSON.parse(localStorage.getItem("cast"))["city"]
-        console.log("session값 잘받아와지니 > ", city);
-        formData.append("city", city);
-        formData.append("content", $("#content").val());
-        fetch("/post/create", { method: "POST", body: formData })
+        let city = JSON.parse(localStorage.getItem('cast'))['city'];
+        console.log('session값 잘받아와지니 > ', city);
+        formData.append('city', city);
+        formData.append('content', $('#content').val());
+        fetch('/post/create', { method: 'POST', body: formData })
           .then((response) => response.json())
           .then((data) => {
-            alert(data["msg"]);
+            alert(data['msg']);
             window.location.reload();
           });
       }
@@ -75,9 +80,9 @@
       }
 
       @font-face {
-        font-family: "GangwonEduPowerExtraBoldA";
-        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
-          format("woff");
+        font-family: 'GangwonEduPowerExtraBoldA';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff')
+          format('woff');
         font-weight: normal;
         font-style: normal;
       }
@@ -98,6 +103,7 @@
       header {
         width: 100%;
         height: 500px;
+        margin: 25px auto 0 auto;
       }
 
       .head_title {
@@ -116,7 +122,7 @@
 
       .head_title h1 {
         text-align: center;
-        font-family: "GangwonEduPowerExtraBoldA";
+        font-family: 'GangwonEduPowerExtraBoldA';
         font-size: 40px;
       }
 
