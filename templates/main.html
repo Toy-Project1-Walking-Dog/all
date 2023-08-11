@@ -55,12 +55,16 @@
       margin-left: 150px;
       margin-right: 61px;
       margin-top: 166px;
+      background-image: url(https://o.quizlet.com/50YUx0SK5476LN3WE8l4Ng.png);
+      background-repeat: no-repeat;
+      background-position-y: 120px;
+      background-position-x: 120px;
     }
     .info {
       display: flex;
       flex-direction: column;
       text-align: center;
-      margin-top: 165px;
+      margin-top: 100px;
       margin-left: 40px;
     }
     .btn {
@@ -125,6 +129,16 @@
       margin-top: 26px;
       margin-left: 1350px;
     }
+    .walk {
+      color: #ff6767;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-style: bold;
+      margin-top: 20px;
+      text-decoration-line: underline;
+    }
   </style>
 
   <script>
@@ -181,9 +195,8 @@
           $('#datas').append(temp);
           $('#watchWalk').empty();
           let temp2 = `
-            <button id="${city}" onclick="postlist(this.id)">${city} 후기보기!</button>
+            <button class="walk" id="${city}" onclick="postlist(this.id)">${city} 후기보기!</button>
           `;
-          // let temp2 = `<a href="/api/post" id="watchWalk">${city} 후기보기</a>`;
           $('#watchWalk').append(temp2);
         })
         .catch((err) => {
@@ -236,7 +249,7 @@
           <h3>미세먼지 수치 200</h3>
           <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
         </div>
-        <a href="" id="watchWalk">산책 후기 보러 가기</a>
+        <div id="watchWalk"></div>
       </div>
     </div>
   </body>

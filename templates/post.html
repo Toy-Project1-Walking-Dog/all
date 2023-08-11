@@ -19,10 +19,8 @@
             let city = JSON.parse(localStorage.getItem('cast'))['city'];
             let rows = data['rows'];
             let user_info = data['user_info'];
-            console.log('city : ', city);
-            console.log('여기확인 : ', rows);
-            // console.log("username:", user_info['username'])
-            // console.log("userid:", user_info['userid'])
+            // console.log('city : ', city);
+            // console.log('여기확인 : ', rows);
             rows.forEach((row) => {
               if (row['city'] == city) {
                 let delete_html = ``;
@@ -62,7 +60,6 @@
       function post_create() {
         let formData = new FormData();
         let city = JSON.parse(localStorage.getItem('cast'))['city'];
-        console.log('session값 잘받아와지니 > ', city);
         formData.append('city', city);
         formData.append('content', $('#content').val());
         fetch('/post/create', { method: 'POST', body: formData })
@@ -102,7 +99,7 @@
 
       header {
         width: 100%;
-        height: 500px;
+        height: 300px;
         margin: 25px auto 0 auto;
       }
 
@@ -111,7 +108,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        height: 275px;
+        height: 150px;
         margin-left: 75px;
       }
 
@@ -174,14 +171,17 @@
         align-items: center;
         justify-content: center;
         height: 150px​;
+        margin-bottom: 50px;
       }
 
       .in_box {
         width: 95%;
         max-width: 1240px;
-        height: 120px;
-        margin: 0 auto;
+        height: 100px;
+        margin: 25px auto 25px auto;
         border-radius: 10px;
+        justify-content: center;
+        align-items: center;
       }
 
       .writer {
@@ -198,11 +198,11 @@
         line-height: 100px;
         border-radius: 15px;
         position: relative;
+        padding-left: 10px;
       }
 
       .main_word {
         font-size: 20px;
-        font-weight: bold;
         margin-left: 10px;
       }
 
@@ -219,33 +219,49 @@
         margin-top: 25px;
         margin-right: 40px;
       }
+      .logout {
+        width: 125px;
+        height: 48px;
+        border-radius: 14px;
+        background: #ffb8a8;
+        color: black;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 26px;
+        margin-left: 1350px;
+        font-weight: 500;
+      }
     </style>
     <title>게시판</title>
   </head>
 
   <body>
-    <header>
-      <div class="head_title">
-        <div>
-          <h1>나 오늘 산책했개</h1>
+    <button class="logout" onclick="logout()">로그아웃</button>
+    <div class="layout">
+      <header>
+        <div class="head_title">
+          <div>
+            <h1>나 오늘 산책했개</h1>
+          </div>
+          <img src="https://ifh.cc/g/1FnxBv.png" alt="" />
         </div>
-        <img src="https://ifh.cc/g/1FnxBv.png" alt="" />
-      </div>
-      <div class="head_box">
-        <div class="record_box">
-          <input
-            type="text"
-            id="content"
-            class="control"
-            placeholder="오늘 산책 후기를 써주세요"
-          />
-          <button onclick="post_create()" type="button" class="record_btn">
-            기록하기
-          </button>
+        <div class="head_box">
+          <div class="record_box">
+            <input
+              type="text"
+              id="content"
+              class="control"
+              placeholder="오늘 산책 후기를 써주세요"
+            />
+            <button onclick="post_create()" type="button" class="record_btn">
+              기록하기
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <div class="mybox" id="box-list"></div>
+      <div class="mybox" id="box-list"></div>
+    </div>
   </body>
 </html>
