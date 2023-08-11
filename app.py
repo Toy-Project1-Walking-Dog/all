@@ -1,4 +1,3 @@
-from tkinter.messagebox import NO
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import requests
 
@@ -139,22 +138,39 @@ def post_create():
     db.posts.insert_one(doc)
     return jsonify({"msg": "saved!"})
 
-# @app.route("/post", methods=["GET"])
-
 # 박나원
 # 게시글 보기
 @app.route("/post", methods=["GET"])
 def post_get():
     return jsonify({'rows': list(db.posts.find({},{'_id':False}))})
 
+@app.route("/api/post", methods=["GET"])
+def post_apiGet():
+    return render_template('post.html')
+
 
 # 박나원
 # 게시글 삭제
+# @app.route("/post/delete", methods=["POST"])
+# def post_delete():
+#     return jsonify({"msg": "whataever you want"})
+
+
 @app.route("/post/delete", methods=["POST"])
 def post_delete():
-    
-    return jsonify({"msg": "whataever you want"})
-
+    # 로그인 확인
+    token_receive = request.cookies.get("usertoken")
+    if token_receive is None:
+         return jsonify({"error": "로그인이 필요합니다."})
+    # 삭제할 게시물 ID 추출
+    data = request.get_json()
+    postid = data['postid']
+    # 게시물 삭제
+    result = db.posts.delete_one({"postid": postid, "userid": jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])["userid"]})
+    if result.deleted_count > 0:
+        return redirect({url_for("post_list")},token_receive)  # post_list 라우트로 리다이렉션
+    else:
+        return jsonify({"error": "게시물 삭제에 실패하였습니다."},{"msg": "게시물이 삭제되었습니다."})
 
 if __name__ == "__main__":
     app.run("0.0.0.0", port=5001, debug=True)

@@ -9,9 +9,9 @@
   </head>
   <style>
     @font-face {
-      font-family: 'GangwonEduPowerExtraBoldA';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff')
-        format('woff');
+      font-family: "GangwonEduPowerExtraBoldA";
+      src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+        format("woff");
       font-weight: normal;
       font-style: normal;
     }
@@ -82,12 +82,12 @@
       margin-top: 100px;
     }
     .title {
-      font-family: 'GangwonEduPowerExtraBoldA';
+      font-family: "GangwonEduPowerExtraBoldA";
       font-size: 72px;
       text-align: center;
     }
     .title2 {
-      font-family: 'GangwonEduPowerExtraBoldA';
+      font-family: "GangwonEduPowerExtraBoldA";
       font-size: 40px;
       text-align: center;
     }
@@ -106,23 +106,23 @@
   <script>
     function login() {
       $.ajax({
-        type: 'POST',
-        url: '/api/login',
-        data: { userid: $('#userid').val(), userpw: $('#userpw').val() },
+        type: "POST",
+        url: "/api/login",
+        data: { userid: $("#userid").val(), userpw: $("#userpw").val() },
         success: function (response) {
-          if (response['result'] == 'success') {
-            $.cookie('usertoken', response['token']);
+          if (response["result"] == "success") {
+            $.cookie("usertoken", response["token"]);
 
-            alert('로그인 완료!');
-            window.location.href = '/';
+            alert("로그인 완료!");
+            window.location.href = "/";
           } else {
-            alert(response['msg']);
+            alert(response["msg"]);
           }
         },
       });
     }
     function signup() {
-      window.location.href = '/signup';
+      window.location.href = "/signup";
     }
   </script>
 
