@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+      function logout() {
+        $.removeCookie('usertoken');
+        alert('로그아웃!');
+        window.location.href = '/login';
+      }
+
+      $(document).ready(function () {
+        show_post();
+      });
+
+      function show_post() {
+        fetch('/post')
+          .then((res) => res.json())
+          .then((data) => {
+            let city = JSON.parse(localStorage.getItem('cast'))['city'];
+            let rows = data['rows'];
+            let user_info = data['user_info'];
+            // console.log('city : ', city);
+            // console.log('여기확인 : ', rows);
+            rows.forEach((row) => {
+              if (row['city'] == city) {
+                let delete_html = ``;
+                if (
+                  row['userid'] == user_info['userid'] &&
+                  row['username'] == user_info['username']
+                ) {
+                  delete_html = `<button onclick="delete_post(this.id)" type="button" class="del" id=${row['postid']}>삭제</button>`;
+                }
+                temp_html = `<div class="in_box">
+                      <div class="writer">
+                      <h4>${row['username']}</h4>
+                      </div>
+                      <div class="main">
+                      <div class="main_word" id="cur_post">${row['content']}
+                        ${delete_html}
+                      </div>
+                      </div>
+                      </div>`;
+                $('#box-list').append(temp_html);
+              }
+            });
+          });
+      }
+
+      function delete_post(idClicked) {
+        let formData = new FormData();
+        formData.append('postid', idClicked);
+        fetch('/post/delete', { method: 'POST', body: formData })
+          .then((res) => res.json())
+          .then((data) => {
+            alert(data['msg']);
+            window.location.reload();
+          });
+      }
+
+      function post_create() {
+        let formData = new FormData();
+        let city = JSON.parse(localStorage.getItem('cast'))['city'];
+        formData.append('city', city);
+        formData.append('content', $('#content').val());
+        fetch('/post/create', { method: 'POST', body: formData })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data['msg']);
+            window.location.reload();
+          });
+      }
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      @font-face {
+        font-family: 'GangwonEduPowerExtraBoldA';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff')
+          format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      ul,
+      li {
+        list-style: none;
+      }
+
+      body {
+        background-color: #ffdcc9;
+      }
+
+      header {
+        width: 100%;
+        height: 300px;
+        margin: 25px auto 0 auto;
+      }
+
+      .head_title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 150px;
+        margin-left: 75px;
+      }
+
+      header img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .head_title h1 {
+        text-align: center;
+        font-family: 'GangwonEduPowerExtraBoldA';
+        font-size: 40px;
+      }
+
+      .head_box {
+        width: 95%;
+        max-width: 1240px;
+        height: 40px;
+        padding: 30px 0 30px 0;
+        background: #fff;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+
+      .record_box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 60px;
+        margin-top: -5px;
+      }
+
+      .record_box > input {
+        width: 857px;
+        height: 100%;
+        border-radius: 15px;
+        border: 1px solid #99999942;
+        margin-left: 50px;
+        padding-left: 8px;
+        font-size: 20px;
+      }
+
+      .record_box > button {
+        width: 164px;
+        height: 50px;
+        text-align: center;
+        border-radius: 25px;
+        border: 1px solid #fff;
+        background: #343434;
+        color: #fff;
+        margin-right: 40px;
+        font-size: 17px;
+      }
+
+      .mybox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 150px​;
+        margin-bottom: 50px;
+      }
+
+      .in_box {
+        width: 95%;
+        max-width: 1240px;
+        height: 100px;
+        margin: 25px auto 25px auto;
+        border-radius: 10px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .writer {
+        width: 75px;
+        height: 25px;
+        text-align: left;
+        margin-left: 5px;
+      }
+
+      .main {
+        height: 100px;
+        background: #fff;
+        text-align: left;
+        line-height: 100px;
+        border-radius: 15px;
+        position: relative;
+        padding-left: 10px;
+      }
+
+      .main_word {
+        font-size: 20px;
+        margin-left: 10px;
+      }
+
+      .main_word > button {
+        width: 164px;
+        height: 50px;
+        text-align: center;
+        border-radius: 25px;
+        border: 1px solid #fff;
+        background: #343434;
+        color: #fff;
+        font-size: 17px;
+        float: right;
+        margin-top: 25px;
+        margin-right: 40px;
+      }
+      .logout {
+        width: 125px;
+        height: 48px;
+        border-radius: 14px;
+        background: #ffb8a8;
+        color: black;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 26px;
+        margin-left: 1350px;
+        font-weight: 500;
+      }
+    </style>
+    <title>게시판</title>
+  </head>
+
+  <body>
+    <button class="logout" onclick="logout()">로그아웃</button>
+    <div class="layout">
+      <header>
+        <div class="head_title">
+          <div>
+            <h1>나 오늘 산책했개</h1>
+          </div>
+          <img src="https://ifh.cc/g/1FnxBv.png" alt="" />
+        </div>
+        <div class="head_box">
+          <div class="record_box">
+            <input
+              type="text"
+              id="content"
+              class="control"
+              placeholder="오늘 산책 후기를 써주세요"
+            />
+            <button onclick="post_create()" type="button" class="record_btn">
+              기록하기
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="mybox" id="box-list"></div>
+    </div>
+  </body>
+</html>

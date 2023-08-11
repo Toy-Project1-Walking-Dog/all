@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>확인하기</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+  </head>
+
+  <script>
+    // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+    function logout() {
+      $.removeCookie('usertoken');
+      alert('로그아웃!');
+      window.location.href = '/login';
+    }
+  </script>
+
+  <script>
+    function postlist(idClicked) {
+      var cast = {
+        city: idClicked,
+      };
+      localStorage.setItem('cast', JSON.stringify(cast));
+      window.location.href = '/api/post';
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #ffdcc9;
+      width: 1440px;
+      height: 1024px;
+    }
+    .layout {
+      background-color: #ffdcc9;
+      display: flex;
+    }
+    .whiteBox {
+      width: 580px;
+      height: 717px;
+      display: flex;
+      background-color: white;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 14px;
+      margin-left: 150px;
+      margin-right: 61px;
+      margin-top: 166px;
+      background-image: url(https://o.quizlet.com/50YUx0SK5476LN3WE8l4Ng.png);
+      background-repeat: no-repeat;
+      background-position-y: 120px;
+      background-position-x: 120px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-top: 100px;
+      margin-left: 40px;
+    }
+    .btn {
+      width: 89px;
+      height: 43px;
+      border-radius: 47px;
+      font-size: 24px;
+      font-style: bold;
+      background-color: #343434;
+      color: white;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      margin-top: 80px;
+      margin-bottom: 80px;
+      transition: box-shadow 0.3s;
+      margin-left: 20px;
+    }
+    .btn:hover {
+      box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
+    }
+    .dropBar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 {
+      font-size: 28px;
+      margin-bottom: 32px;
+    }
+    h3 {
+      font-size: 24px;
+      margin-bottom: 82px;
+    }
+    img {
+      width: 300px;
+      height: 300px;
+    }
+    a {
+      color: #ff6767;
+    }
+    .list {
+      width: 350px;
+      height: 48px;
+      border-radius: 10px;
+      border: 1px solid #dbdbdb;
+      background: #fff;
+      color: #343434;
+      font-size: 20px;
+      padding-left: 5px;
+    }
+    .logout {
+      width: 125px;
+      height: 48px;
+      border-radius: 14px;
+      background: #ffb8a8;
+      color: black;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 26px;
+      margin-left: 1350px;
+    }
+    .walk {
+      color: #ff6767;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-style: bold;
+      margin-top: 20px;
+      text-decoration-line: underline;
+    }
+  </style>
+
+  <script>
+    const test = () => {
+      const choiceCity = $('#cities option:checked').text();
+      console.log(choiceCity);
+      fetch('/api/check', {
+        method: 'POST',
+        body: new URLSearchParams({
+          city: choiceCity,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          $('#datas').empty();
+          let city = await data[1].city; // 예)강남구
+          let dust = await data[0].dust; // 예)먼지수치 (숫자값)
+          let status; // 예)먼지좋음나쁨지수
+
+          let dustNum = Number(dust);
+
+          let imglike = 'https://ifh.cc/g/ASMKOR.png'; // 좋을때 강아지
+          let imgSad = 'https://ifh.cc/g/La4Skd.png'; // 조금 슬플때 강아지
+          let imgNomal = 'https://ifh.cc/g/X1Xamn.png'; // 보통 강아지
+          let imgVerySad = 'https://ifh.cc/g/P0G3hG.png'; // 매우 슬플때 강아지
+
+          let img;
+
+          // python에서 형변화 오류발생으로 프론트로넘겨서 형변화후 작업했습니다
+          if (dustNum >= 0 || dustNum <= 15) {
+            status = '좋음';
+            img = imglike;
+          } else if (dustNum <= 35) {
+            status = '보통';
+            img = imgNomal;
+          } else if (dustNum <= 75) {
+            status = '나쁨';
+            img = imgSad;
+          } else if (dustNum > 75) {
+            status = '매우나쁨';
+            img = imgVerySad;
+          }
+          console.log(city, dustNum, status);
+
+          // 아래 수치부분은 dust로 할시 data의 받아오는 속도차이로 프론트에서 약2초간 기달려야 나오는 이슈가있습니다
+          // 그래서 await함수후 형변화한 dustNum을 넣었으니 변경하지말아주세요
+          let temp = `
+          <div class="text" id="datas">
+            <h2>${city}의 미세먼지는 ${status}입니다!</h2>
+            <h3>미세먼지 수치 ${dustNum}</h3>
+            <img src=${img} alt="" />
+          </div>
+          `;
+          $('#datas').append(temp);
+          $('#watchWalk').empty();
+          let temp2 = `
+            <button class="walk" id="${city}" onclick="postlist(this.id)">${city} 후기보기!</button>
+          `;
+          $('#watchWalk').append(temp2);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert('위치정보를 잘못입력하셨습니다. 다시 입력해 주세요');
+          window.location.reload();
+        });
+    };
+  </script>
+
+  <body>
+    <button class="logout" onclick="logout()">로그아웃</button>
+    <div class="layout">
+      <div class="whiteBox"></div>
+      <div class="info">
+        <div class="dropBar">
+          <div class="seoul">
+            <select class="list" id="cities">
+              <option value="#">강남구</option>
+              <option value="#">강동구</option>
+              <option value="#">강북구</option>
+              <option value="#">강서구</option>
+              <option value="#">관악구</option>
+              <option value="#">광진구</option>
+              <option value="#">구로구</option>
+              <option value="#">금천구</option>
+              <option value="#">노원구</option>
+              <option value="#">도봉구</option>
+              <option value="#">동대문구</option>
+              <option value="#">동작구</option>
+              <option value="#">마포구</option>
+              <option value="#">서대문구</option>
+              <option value="#">서초구</option>
+              <option value="#">성동구</option>
+              <option value="#">성북구</option>
+              <option value="#">송파구</option>
+              <option value="#">양천구</option>
+              <option value="#">영등포구</option>
+              <option value="#">용산구</option>
+              <option value="#">은평구</option>
+              <option value="#">종로구</option>
+              <option value="#">중구</option>
+              <option value="#">중랑구</option>
+            </select>
+          </div>
+          <button type="button" class="btn" onclick="test()">확인</button>
+        </div>
+        <div class="text" id="datas">
+          <h2>강남구의 미세먼지는 좋음입니다!</h2>
+          <h3>미세먼지 수치 200</h3>
+          <img src="https://ifh.cc/g/ASMKOR.png" alt="" />
+        </div>
+        <div id="watchWalk"></div>
+      </div>
+    </div>
+  </body>
+</html>
